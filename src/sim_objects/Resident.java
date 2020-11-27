@@ -1,0 +1,113 @@
+package sim_objects;
+
+import simulation.Control;
+import simulation.SettingsUI;
+
+
+//A citizen is a Person and contains properties to support position and movement
+public abstract class Resident extends RectangleCollider {
+	//dynamic copy of Control instance, used for settings
+	Control control = null;
+	
+	//grid boundaries
+	protected int xExt, yExt;
+
+	//velocity
+	int vx, vy;
+	
+	protected boolean isRoaming = false;
+	double roamingPercent;
+	
+	/*
+	 * Constructor using static values
+	 */
+	public Resident() {
+		// Grid size
+		xExt = SettingsUI.sXExt;
+		yExt = SettingsUI.sYExt;
+		// position in grid
+		width = SettingsUI.sOvalW;
+		height = SettingsUI.sOvalH;
+		// roaming probability
+		roamingPercent = SettingsUI.sToRoam;
+		
+		this.init();
+	}
+	
+	/*
+	 * Constructor using Control Panel values
+	 */
+	public Resident(Control control) {
+		// Settings
+		this.control = control;
+		
+		// Grid size
+		xExt = control.xExt;
+		yExt = control.yExt;
+		// position in grid
+		width = control.OvalW;
+		height = control.OvalH;
+		// roaming probability
+		roamingPercent = control.toRoam;
+		
+		this.init();
+	}
+	
+	/*
+	 * Constructor helper
+	 */
+	private void init() {
+		
+		//randomize the position of the Person object to be within the SocialDistance frame!
+		x = (int)(Math.random()*(xExt)+0);
+		y = (int)(Math.random()*(yExt)+0);
+				
+		//social distancing part - when do the objects have movement vx and vy?
+		//for instance 10% of the time the code below will run to give the objects a non-zero vx and vy
+		//to simulate that 10% of instantiated objects are NOT practicing social distancing
+		if(Math.random() < roamingPercent) {
+			vx  = (int)(Math.random()*(10+1)+-5);	// velocity x
+			vy  = (int)(Math.random()*(10+1)+-5);	// velocity y
+			isRoaming = true;
+		}
+				
+	}
+	
+	/**
+	 * Velocity of an object is conditioned by settings in constructor
+	 * 1. Move x, y position of resident object
+	 * 2. Check if resident object boundary/frame extent is reached, then reflect
+	 */
+	public void velocityManager() {
+		
+		//x and y components are updated based on their velocities
+		x += vx;
+		y += vy;
+		
+		//code to reverse object when reaching left/right extents
+		if(x < 0 || x >= xExt) {
+			vx *= -1;
+		}
+		
+		//code to reverse object when reaching top/bottom extents
+		if(y < 0 || y >= yExt) {
+			vy *= -1;
+		}
+
+	}
+	
+	/**
+	 * Velocity of a roaming object is set to stationary
+	 */
+	public void velocityStop() {
+		vx = 0; vy = 0;
+		isRoaming = false;
+	}
+
+	public boolean isRoaming() {
+		return isRoaming;
+	}
+	
+
+	
+}
