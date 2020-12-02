@@ -13,3 +13,4 @@
 |  Writing Classes - Inheritance | Wall.java and Resident.java extend RectangleCollider as in simulation collision is based on rectangular coordinates |
 |  JFrame, UI classes | SettingsUI shows usage of a JFrame to control settings for simulation.  Notice usage of defaults and of external class reference of public settings from Control.java |
 |  IntelliJ, GitHub | Using real world development and version control tools |
+[Event Programming highlights](https://padlet.com/jmortensen7/csavirussimu)
